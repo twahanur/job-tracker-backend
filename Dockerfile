@@ -2,29 +2,29 @@ FROM node:22-slim
 
 WORKDIR /app
 
-# Install OpenSSL for Prisma and ca-certificates
+# Install OpenSSL for Prisma engine
 RUN apt-get update -y && apt-get install -y openssl ca-certificates && rm -rf /var/lib/apt/lists/*
 
 # Install pnpm
 RUN npm install -g pnpm@11.16.0
 
-# Copy package specifications
+# Copy package manifests
 COPY package.json pnpm-lock.yaml ./
 COPY prisma ./prisma/
 
-# Set database URL for Prisma client generation
+# Database URL for Prisma schema validation
 ENV DATABASE_URL="postgresql://neondb_owner:npg_MHut8IFrl6Vq@ep-still-flower-ao4zszco-pooler.c-2.ap-southeast-1.aws.neon.tech/job-tracker?sslmode=require"
 
-# Install production dependencies
-RUN pnpm install --prod --no-frozen-lockfile
+# Install dependencies non-interactively
+RUN pnpm install --no-frozen-lockfile
 
-# Generate Prisma Client
-RUN npx prisma generate
+# Generate Prisma Client directly from local node_modules binary
+RUN ./node_modules/.bin/prisma generate
 
-# Copy pre-compiled JavaScript application
+# Copy pre-compiled JavaScript
 COPY dist ./dist
 
-# Ensure uploads directory exists
+# Create uploads directory
 RUN mkdir -p uploads
 
 ENV NODE_ENV=production
