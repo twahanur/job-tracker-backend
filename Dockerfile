@@ -1,42 +1,33 @@
-# Stage 1: Build NestJS Application
-FROM node:22-alpine AS builder
+FROM node:22-slim
 
 WORKDIR /app
 
-# Enable corepack for pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
+# Install OpenSSL for Prisma and essentials
+RUN apt-get update -y && apt-get install -y openssl ca-certificates && rm -rf /var/lib/apt/lists/*
 
-# Copy dependency definitions
+# Install pnpm
+RUN npm install -g pnpm
+
+# Copy dependency files
 COPY package.json pnpm-lock.yaml ./
 COPY prisma ./prisma/
 
-# Install dependencies including dev dependencies
-RUN pnpm install --frozen-lockfile
+# Install dependencies
+RUN pnpm install
 
-# Copy source code and build
+# Copy source files
 COPY . .
-RUN pnpm prisma generate
+
+# Generate Prisma Client
+RUN npx prisma generate
+
+# Build NestJS
 RUN pnpm build
 
-# Stage 2: Production Runner
-FROM node:22-alpine AS runner
-
-WORKDIR /app
-ENV NODE_ENV=production
-
-RUN corepack enable && corepack prepare pnpm@latest --activate
-
-COPY package.json pnpm-lock.yaml ./
-COPY prisma ./prisma/
-
-# Install production dependencies only
-RUN pnpm install --prod --frozen-lockfile
-RUN pnpm prisma generate
-
-# Copy compiled files from builder
-COPY --from=builder /app/dist ./dist
+# Ensure uploads directory
 RUN mkdir -p uploads
 
+ENV NODE_ENV=production
 EXPOSE 5000
 
 CMD ["node", "dist/main.js"]
