@@ -9,7 +9,6 @@ node_modules
 .env.development
 
 # Build outputs
-dist
 build
 
 # Logs

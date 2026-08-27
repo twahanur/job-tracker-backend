@@ -1,0 +1,31 @@
+import { WorkMode, JobType, JobSource } from '@prisma/client';
+export declare class CreateJobDto {
+    title: string;
+    companyName: string;
+    sourceUrl?: string;
+    sourcePlatform?: JobSource;
+    location?: string;
+    country?: string;
+    workMode?: WorkMode;
+    jobType?: JobType;
+    experienceRequired?: string;
+    minSalary?: number;
+    maxSalary?: number;
+    salaryCurrency?: string;
+    salaryPeriod?: string;
+    description: string;
+    responsibilities?: string[];
+    requirements?: string[];
+    requiredSkills?: string[];
+    preferredSkills?: string[];
+    benefits?: string[];
+    deadline?: string;
+    recruiterName?: string;
+    recruiterEmail?: string;
+    expectedSalary?: number;
+    expectedSalaryCurrency?: string;
+    applicationNotes?: string;
+    portalUrl?: string;
+    applicationStatus?: string;
+    selectedCvId?: string;
+}

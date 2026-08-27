@@ -12,18 +12,17 @@ RUN npm install -g pnpm@11.16.0
 COPY package.json pnpm-lock.yaml ./
 COPY prisma ./prisma/
 
-# Set build-time database URL for Prisma schema validation
+# Set database URL for Prisma client generation
 ENV DATABASE_URL="postgresql://neondb_owner:npg_MHut8IFrl6Vq@ep-still-flower-ao4zszco-pooler.c-2.ap-southeast-1.aws.neon.tech/job-tracker?sslmode=require"
 
-# Install all dependencies
-RUN pnpm install
+# Install production dependencies
+RUN pnpm install --prod --no-frozen-lockfile
 
-# Copy source code
-COPY . .
-
-# Generate Prisma Client & Build
+# Generate Prisma Client
 RUN npx prisma generate
-RUN npx @nestjs/cli build
+
+# Copy pre-compiled JavaScript application
+COPY dist ./dist
 
 # Ensure uploads directory exists
 RUN mkdir -p uploads
