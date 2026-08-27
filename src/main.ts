@@ -9,7 +9,7 @@ async function bootstrap() {
   const logger = new Logger('Bootstrap');
   const app = await NestFactory.create(AppModule);
 
-  const port = process.env.PORT || 5000;
+  const port = parseInt(process.env.PORT || '5000', 10);
   const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
 
   // Security & Middlewares
@@ -68,9 +68,9 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
 
-  await app.listen(port);
-  logger.log(`🚀 Application is running on: http://localhost:${port}/api`);
-  logger.log(`📚 Swagger documentation available at: http://localhost:${port}/api/docs`);
+  await app.listen(port, '0.0.0.0');
+  logger.log(`🚀 Application is running on: http://0.0.0.0:${port}/api`);
+  logger.log(`📚 Swagger documentation available at: http://0.0.0.0:${port}/api/docs`);
 }
 
 bootstrap();
