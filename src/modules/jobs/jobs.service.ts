@@ -38,7 +38,9 @@ export class JobsService {
         sourcePlatform = scraped.platform;
       } catch (err: any) {
         this.logger.error(`Failed to scrape URL: ${dto.url}`, err);
-        throw new BadRequestException(`Could not scrape job from URL: ${err.message}`);
+        throw new BadRequestException(
+          `Could not scrape from this URL (${err.message}). Websites like LinkedIn or job boards with login/bot protection restrict automated scraping. Please copy and paste the job description text below for instant AI extraction.`,
+        );
       }
     }
 

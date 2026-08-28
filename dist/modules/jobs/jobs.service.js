@@ -38,7 +38,7 @@ let JobsService = JobsService_1 = class JobsService {
             }
             catch (err) {
                 this.logger.error(`Failed to scrape URL: ${dto.url}`, err);
-                throw new common_1.BadRequestException(`Could not scrape job from URL: ${err.message}`);
+                throw new common_1.BadRequestException(`Could not scrape from this URL (${err.message}). Websites like LinkedIn or job boards with login/bot protection restrict automated scraping. Please copy and paste the job description text below for instant AI extraction.`);
             }
         }
         if (!rawText.trim()) {
