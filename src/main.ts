@@ -29,6 +29,7 @@ async function bootstrap() {
         allowedOrigins.includes(origin) ||
         origin.endsWith('.pages.dev') ||
         origin.endsWith('.workers.dev') ||
+        origin.endsWith('twahanur.dev') ||
         origin.includes('localhost');
 
       if (isAllowed || process.env.NODE_ENV !== 'production') {
